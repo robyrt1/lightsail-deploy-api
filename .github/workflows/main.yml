@@ -1,0 +1,58 @@
+name: Deploy Node.js API to AWS Lightsail
+
+on:
+  push:
+    branches:
+      - main # O workflow será executado ao fazer push na branch main
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checar o código
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.10.3
+
+      # - name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: ./
+      #     push: true
+      #     file: ./docker/pipeline.dockerfile
+      #     version: 26.1.2
+      #     tags: | 
+      #       robyrt/api-catalago:latest
+      #       robyrt/api-catalago:${{ github.run_number }}
+  
+      # Step 3: Logar no Amazon ECR
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Step 4: Construir a imagem Docker
+      - name: Build Docker image
+        run: |
+          docker build -t lightsailDeployApi ./Docker/production-Dockerfile
+          docker tag lightsailDeployApi:latest ${{ secrets.AWS_ECR_REGISTRY }}/my-api:latest
+
+      # Step 5: Subir a imagem para o Amazon ECR
+      - name: Push Docker image to Amazon ECR
+        run: |
+          docker push ${{ secrets.AWS_ECR_REGISTRY }}/lightsailDeployApi:latest
+
+      # Step 6: Atualizar o container no Lightsail (usando o AWS CLI)
+      - name: Deploy to AWS Lightsail
+        run: |
+          aws lightsail push-container-image --region ${{ secrets.AWS_REGION }} --image my-api:latest
+          aws lightsail create-container-service-deployment --region ${{ secrets.AWS_REGION }} --service-name my-api-service --containers file://containers.json
