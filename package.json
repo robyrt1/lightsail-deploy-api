@@ -1,0 +1,45 @@
+{
+  "name": "lightsail-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "npm run format && ts-node-dev --respawn  --env-file=.env --transpile-only src/server.ts",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build": "tsc",
+    "start:prod": "node  --env-file=.env  dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@nestjs/common": "^10.4.8",
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "inversify": "^6.1.4",
+    "inversify-express-utils": "^6.4.7",
+    "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.46",
+    "rxdb": "^15.39.0",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/inversify": "^2.0.32",
+    "@types/lodash": "^4.17.13",
+    "@types/morgan": "^1.9.9",
+    "morgan": "^1.10.0",
+    "prettier": "^3.3.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
+  },
+  "pre-commit": [
+    "format"
+  ],
+  "engines": {
+    "node": ">=20.11.1",
+    "npm": ">=10.2.4"
+  }
+}

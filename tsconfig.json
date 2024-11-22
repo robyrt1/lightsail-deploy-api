@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      /* Projects */
+      "incremental": true,                              
+      "target": "es2020",                                 
+      "experimentalDecorators": true,                   
+      "emitDecoratorMetadata": true,                    
+      /* Modules */
+      "module": "commonjs",                               
+      "outDir": "./dist/",                                  
+      "esModuleInterop": true,                           
+      "forceConsistentCasingInFileNames": true,           
+  
+      /* Type Checking */
+      "strict": true,                                     
+      "strictNullChecks": false,                       
+    },
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+  ]
+}

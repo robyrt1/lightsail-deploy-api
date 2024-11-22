@@ -1,0 +1,14 @@
+version: '3'
+services:
+  api:
+    container_name: lightSail-Api
+    build:
+      context: './'
+      dockerfile: ./Docker/production.Dockerfile
+    restart: always
+    volumes:
+      - ./:/api/
+    environment:
+      - NODE_ENV=env
+    ports:
+      - 5007:3333
